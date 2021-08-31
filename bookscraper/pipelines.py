@@ -19,7 +19,7 @@ class BookscraperPipeline:
 
     def create_connection(self):
         # LOCAL TESTING
-        DATABASE_URL = "postgresql://postgres:1books234@localhost/bookscraper"
+        DATABASE_URL = "postgresql://postgres:books1234@localhost/bookscraper"
         # DATABASE_URL = os.environ.get("DATABASE_URL")
         engine = create_engine(DATABASE_URL)
         self.db = scoped_session(sessionmaker(bind=engine))
