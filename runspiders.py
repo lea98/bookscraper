@@ -15,4 +15,3 @@ process.crawl(ZnanjeSpider)
 process.crawl(MozaikSpider)
 
 process.start()
-
