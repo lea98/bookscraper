@@ -19,7 +19,7 @@ class BookscraperPipeline:
 
     def create_connection(self):
         # LOCAL TESTING
-        DATABASE_URL = "postgresql://postgres:books1234@localhost/bookscraper"
+        DATABASE_URL = "postgresql://postgres:1books234@localhost/bookscraper"
         # DATABASE_URL = os.environ.get("DATABASE_URL")
         engine = create_engine(DATABASE_URL)
         self.db = scoped_session(sessionmaker(bind=engine))
@@ -35,7 +35,7 @@ class BookscraperPipeline:
         if not exists_in:
             book_id = self.db.execute(
                 """insert into books values (DEFAULT,:title) RETURNING id;""",
-                {"title": item["title"]},
+                {"title": item["title"]}
             )
             book_id_num = book_id.first()[0]
             for auth in item["author"]:
@@ -45,13 +45,13 @@ class BookscraperPipeline:
                 if not auth_is_there_list:
                     auth_id_num = self.db.execute(
                         """insert into authors values (DEFAULT,:auth) RETURNING id;""",
-                        {"auth": auth},
+                        {"auth": auth}
                     ).first()[0]
                 else:
                     auth_id_num = auth_is_there_list[0]
                 self.db.execute(
                     """insert into book_authors values (:bid,:autid);""",
-                    {"bid": book_id_num, "autid": auth_id_num},
+                    {"bid": book_id_num, "autid": auth_id_num}
                 )
         else:
             book_id_num = exists_in
@@ -66,7 +66,7 @@ class BookscraperPipeline:
                 "bookid": book_id_num,
                 "page": item["page"],
                 "dateadd": item["date_added"],
-            },
+            }
         )
 
         self.db.commit()  # UNCOMMENT AFTER TESTING
@@ -81,12 +81,12 @@ class BookscraperPipeline:
         for book_id in list(all_books_with_that_name):
             book_authors_match = self.db.execute(
                 """select author_id from book_authors where book_id = :bid;""",
-                {"bid": book_id[0]},
+                {"bid": book_id[0]}
             )
             for author_name in list(book_authors_match):
                 authors_match = self.db.execute(
                     """select name from authors where id = :autname;""",
-                    {"autname": author_name[0]},
+                    {"autname": author_name[0]}
                 )
                 if not list(authors_match)[0][0] in item["author"]:
                     break
